@@ -84,6 +84,14 @@ func InitDB(dbPath string) error {
 		&model.Stats{},
 		&model.Client{},
 		&model.Changes{},
+		&model.TelegramBotConfig{},
+		&model.TelegramTariff{},
+		&model.TelegramTariffButton{},
+		&model.TelegramUserProfile{},
+		&model.TelegramUserMessage{},
+		&model.TelegramBroadcast{},
+		&model.TelegramBroadcastDelivery{},
+		&model.TelegramPromoCode{},
 	)
 	if err != nil {
 		return err

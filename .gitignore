@@ -6,6 +6,8 @@ bin/
 db/
 sui
 web/html
+!web/html/
+!web/html/**
 main
 tmp
 .sync*
