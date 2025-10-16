@@ -26,6 +26,7 @@ type ApiService struct {
 	service.PanelService
 	service.StatsService
 	service.ServerService
+	TelegramService *service.TelegramService
 }
 
 func (a *ApiService) LoadData(c *gin.Context) {

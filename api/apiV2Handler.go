@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/alireza0/s-ui/logger"
+	"github.com/alireza0/s-ui/service"
 	"github.com/alireza0/s-ui/util/common"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ type APIv2Handler struct {
 
 func NewAPIv2Handler(g *gin.RouterGroup) *APIv2Handler {
 	a := &APIv2Handler{}
+	a.TelegramService = service.SharedTelegramService()
 	a.ReloadTokens()
 	a.initRouter(g)
 	return a

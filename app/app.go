@@ -10,6 +10,7 @@ import (
 	"github.com/alireza0/s-ui/logger"
 	"github.com/alireza0/s-ui/service"
 	"github.com/alireza0/s-ui/sub"
+	"github.com/alireza0/s-ui/telegram"
 	"github.com/alireza0/s-ui/web"
 
 	"github.com/op/go-logging"
@@ -23,6 +24,7 @@ type APP struct {
 	cronJob       *cronjob.CronJob
 	logger        *logging.Logger
 	core          *core.Core
+	telegramBot   *telegram.Bot
 }
 
 func NewApp() *APP {
@@ -49,6 +51,7 @@ func (a *APP) Init() error {
 	a.subServer = sub.NewServer()
 
 	a.configService = service.NewConfigService(a.core)
+	a.telegramBot = telegram.NewBot(service.SharedTelegramService())
 
 	return nil
 }
@@ -84,11 +87,20 @@ func (a *APP) Start() error {
 		logger.Error(err)
 	}
 
+	if a.telegramBot != nil {
+		if err := a.telegramBot.Start(); err != nil {
+			logger.Warning("telegram bot start failed:", err)
+		}
+	}
+
 	return nil
 }
 
 func (a *APP) Stop() {
 	a.cronJob.Stop()
+	if a.telegramBot != nil {
+		a.telegramBot.Stop()
+	}
 	err := a.subServer.Stop()
 	if err != nil {
 		logger.Warning("stop Sub Server err:", err)

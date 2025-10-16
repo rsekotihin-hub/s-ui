@@ -3,6 +3,7 @@ package api
 import (
 	"strings"
 
+	"github.com/alireza0/s-ui/service"
 	"github.com/alireza0/s-ui/util/common"
 
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,7 @@ func NewAPIHandler(g *gin.RouterGroup, a2 *APIv2Handler) {
 	a := &APIHandler{
 		apiv2: a2,
 	}
+	a.TelegramService = service.SharedTelegramService()
 	a.initRouter(g)
 }
 
@@ -56,6 +58,30 @@ func (a *APIHandler) postHandler(c *gin.Context) {
 	case "deleteToken":
 		a.ApiService.DeleteToken(c)
 		a.apiv2.ReloadTokens()
+	case "telegramConfig":
+		a.ApiService.SaveTelegramConfig(c)
+	case "telegramTariff":
+		a.ApiService.SaveTelegramTariff(c)
+	case "telegramTariffDelete":
+		a.ApiService.DeleteTelegramTariff(c)
+	case "telegramButton":
+		a.ApiService.SaveTelegramButton(c)
+	case "telegramButtonDelete":
+		a.ApiService.DeleteTelegramButton(c)
+	case "telegramBroadcast":
+		a.ApiService.SaveTelegramBroadcast(c)
+	case "telegramBroadcastDelete":
+		a.ApiService.DeleteTelegramBroadcast(c)
+	case "telegramBroadcastSend":
+		a.ApiService.SendTelegramBroadcast(c)
+	case "telegramBroadcastEdit":
+		a.ApiService.EditTelegramBroadcast(c)
+	case "telegramPromo":
+		a.ApiService.SaveTelegramPromoCode(c)
+	case "telegramPromoDelete":
+		a.ApiService.DeleteTelegramPromoCode(c)
+	case "telegramConversationReply":
+		a.ApiService.ReplyTelegramConversation(c)
 	default:
 		jsonMsg(c, "failed", common.NewError("unknown action: ", action))
 	}
@@ -93,6 +119,12 @@ func (a *APIHandler) getHandler(c *gin.Context) {
 		a.ApiService.GetKeypairs(c)
 	case "getdb":
 		a.ApiService.GetDb(c)
+	case "telegramState":
+		a.ApiService.GetTelegramState(c)
+	case "telegramBroadcastDeliveries":
+		a.ApiService.GetTelegramBroadcastDeliveries(c)
+	case "telegramConversation":
+		a.ApiService.GetTelegramConversation(c)
 	case "tokens":
 		a.ApiService.GetTokens(c)
 	default:
