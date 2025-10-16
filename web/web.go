@@ -57,7 +57,7 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 
 	// Load the HTML template
 	t := template.New("").Funcs(engine.FuncMap)
-	template, err := t.ParseFS(content, "html/index.html")
+	template, err := t.ParseFS(content, "html/*.html")
 	if err != nil {
 		return nil, err
 	}
@@ -108,6 +108,14 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 
 	group_api := engine.Group(base_url + "api")
 	api.NewAPIHandler(group_api, apiv2)
+
+	engine.GET(base_url+"telegram", func(c *gin.Context) {
+		if !api.IsLogin(c) {
+			c.Redirect(http.StatusTemporaryRedirect, base_url+"login")
+			return
+		}
+		c.HTML(http.StatusOK, "telegram.html", gin.H{"BASE_URL": base_url})
+	})
 
 	// Serve index.html as the entry point
 	// Handle all other routes by serving index.html
